@@ -16,6 +16,9 @@
   UIImpactFeedbackGenerator *_impactFeedback;
   UINotificationFeedbackGenerator *_notificationFeedback;
   UISelectionFeedbackGenerator *_selectionFeedback;
+  UIImpactFeedbackGenerator *_impactFeedbackHeavy;
+  UIImpactFeedbackGenerator *_impactFeedbackMedium;
+  UIImpactFeedbackGenerator *_impactFeedbackLight;
 }
 @synthesize bridge = _bridge;
 
@@ -25,6 +28,9 @@ RCT_EXPORT_MODULE()
 {
   _bridge = bridge;
   if ([UIFeedbackGenerator class]) {
+    _impactFeedbackHeavy = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleHeavy];
+    _impactFeedbackMedium = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleMedium];
+    _impactFeedbackLight = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
     _impactFeedback = [UIImpactFeedbackGenerator new];
     _notificationFeedback = [UINotificationFeedbackGenerator new];
     _selectionFeedback = [UISelectionFeedbackGenerator new];
@@ -38,13 +44,27 @@ RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(generate:(NSString *)type)
 {
-  if ([type isEqual: @"impact"]) {
-    [_impactFeedback impactOccurred];
-  } else if ([type isEqual:@"notification"]) {
-    [_notificationFeedback notificationOccurred:UINotificationFeedbackTypeWarning];
-  } else if ([type isEqual:@"selection"]) {
-    [_selectionFeedback selectionChanged];
-  }
+    if ([type isEqual:@"selection"]) {
+        [_selectionFeedback selectionChanged];
+
+    } else if ([type isEqual:@"impactLight"]) {
+        [_impactFeedbackLight impactOccurred];
+
+    } else if ([type isEqual:@"impactMedium"]) {
+        [_impactFeedbackMedium impactOccurred];
+
+    } else if ([type isEqual:@"impactHeavy"]) {
+        [_impactFeedbackHeavy impactOccurred];
+
+    } else if ([type isEqual:@"notificationSuccess"]) {
+        [_notificationFeedback notificationOccurred:UINotificationFeedbackTypeSuccess];
+
+    } else if ([type isEqual:@"notificationWarning"]) {
+        [_notificationFeedback notificationOccurred:UINotificationFeedbackTypeWarning];
+
+    } else if ([type isEqual:@"notificationError"]) {
+        [_notificationFeedback notificationOccurred:UINotificationFeedbackTypeError];
+    }
 }
 
 RCT_EXPORT_METHOD(prepare)
